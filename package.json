@@ -1,0 +1,20 @@
+{
+  "name": "idcs-express-token-validator",
+  "version": "1.0.0",
+  "description": "IDCS Access token validator middleware for Express",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "callan.howell-pavia@oracle.com",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CallanHP/idcs-express-token-validator.git"
+  },
+  "dependencies": {
+    "js-base64": "^2.1.9",
+    "jsonwebtoken": "^7.1.9",
+    "request": "^2.78.0"
+  }
+}
