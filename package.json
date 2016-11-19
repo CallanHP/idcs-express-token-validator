@@ -12,6 +12,7 @@
     "type": "git",
     "url": "https://github.com/CallanHP/idcs-express-token-validator.git"
   },
+  "keywords": ["IDCS", "Oracle", "Authorisation", "Express", "ExpressJS", "Identity"],
   "dependencies": {
     "js-base64": "^2.1.9",
     "jsonwebtoken": "^7.1.9",
