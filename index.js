@@ -10,6 +10,8 @@ var idcs = require('./lib/idcs-token');
 //IDCS may use multiple keys in the future, which would mean we should do key selection.
 //At present only uses RS256, so we are going to ensure that is used (no spoofing with alg:"none" here!).
 const ALGORITHM = "RS256";
+const DEFAULT_JWK_URL = "/admin/v1/SigningCert/jwk";
+const DEFAULT_TOKEN_URL = "/oauth2/v1/token";
 
 //Error messages (future option to make these vars and configurable maybe?)
 const ERR_NO_TOKEN="Invalid or unreadable token provided.";
@@ -42,6 +44,16 @@ module.exports.initialise = function(configuration){
 	}
 	//Set up the configuration
 	config = configuration;
+
+	if(!config.jwk_url){
+		config.jwk_url = DEFAULT_JWK_URL;
+	}
+	if(!config.token_url){
+		config.token_url = DEFAULT_TOKEN_URL;
+	}
+	if(!config.default_scopes){
+		config.default_scopes = "";
+	}
 
 	// Transform URLs which use express parametised routes to regex matches so we can test them with req.path
 	// The regex transformation is going to be simple:
@@ -155,7 +167,7 @@ module.exports.validator = function(req, res, next){
 	}
 	//Default to no scopes required if we couldn't match
 	if(!requiredScopes){
-		requiredScopes = "";
+		requiredScopes = config.default_scopes;
 	}
 	//Ensure that all of the required scopes are in the claimset
 	requiredScopes = requiredScopes.split(" ");
