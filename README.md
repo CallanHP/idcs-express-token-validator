@@ -11,7 +11,7 @@ $ npm install idcs-express-token-validator
 
 ## Usage
 
-The token validator exposes two methods, an initialisation method, initialise(), and a validator. The initialisation method takes a configuration object, which is used to connect to an IDCS instance and pull down the public keys required to validate supplied access tokens. Initialisation is performed asynchronously, and may take a few seconds to obtain the appropriate keys from the IDCS instance. During this time, all token validations will fail.
+The token validator exposes two methods, an initialisation method, initialise(), and a validator. The initialisation method takes a configuration object, which is used to connect to an IDCS instance and pull down the public keys required to validate supplied access tokens. Initialisation is performed asynchronously, and may take a few seconds to obtain the appropriate keys from the IDCS instance. During this time, all token validations will fail. Once initialised, the middleware will validate incoming tokens, reject them if appropriate, and populate a `request.claimSet` object that can be used by downstream services.
 
 ```js
 var tokenValidator = require('idcs-express-token-validator');
