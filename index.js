@@ -93,7 +93,9 @@ module.exports.initialise = function(configuration){
     }
     console.log("idcs-access-token-validator: Initialising - connecting to IDCS...");
     idcs.getBearerToken(config, idcsAgent).then(function(bearerToken){
-        console.log("idcs-access-token-validator: Obtained Bearer Token.");
+        if(bearerToken){
+            console.log("idcs-access-token-validator: Obtained Bearer Token.");
+        }
         idcs.getJWK(config, idcsAgent, bearerToken).then(function(result){
             jwk = result;
             //Parse the RSA Public key which we use for JWT validation (uses the root of the x5c(chain))

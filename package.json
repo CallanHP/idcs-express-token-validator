@@ -14,7 +14,6 @@
   },
   "keywords": ["IDCS", "Oracle", "Authorisation", "Express", "ExpressJS", "Identity"],
   "dependencies": {
-    "js-base64": "^2.1.9",
     "jsonwebtoken": "^7.1.9",
     "request": "^2.78.0"
   }

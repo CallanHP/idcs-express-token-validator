@@ -28,7 +28,11 @@ app.use(tokenValidator.validator);
 
 ## IDCS Setup
 
-Using this Middleware requires a Web Application to be configured in IDCS to support the Client Credential grant (to obtain the JWK Signing Keys), and to be configured as a resource server with some available scopes. These scopes can then be used to protect URIs exposed through Express.
+As of IDCS 17.3.4, IDCS now allows JWKs to be obtained without registering a client. This must be enabled by turning on 'Access Signing Certificate' in the Default Settings screen. If this is enabled, there is no need to configure an application in IDCS, or supply a client_id/secret in the configuration. 
+
+If this is not enabled, this Middleware requires a Web Application to be configured in IDCS to support the Client Credential grant (to obtain the JWK Signing Keys). The client_id and secret of that application need to be provided in the configuration object detailed below.
+
+In order to use scopes for authorisation, the token must have been issued for an IDCS application which is configured as a resource server with those scopes available.
 
 ## Configuration
 
