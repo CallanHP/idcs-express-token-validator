@@ -1,0 +1,114 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'publish' ]
+2 info using npm@3.8.9
+3 info using node@v6.2.0
+4 verbose publish [ '.' ]
+5 silly cache add args [ '.', null ]
+6 verbose cache add spec .
+7 silly cache add parsed spec Result {
+7 silly cache add   raw: '.',
+7 silly cache add   scope: null,
+7 silly cache add   name: null,
+7 silly cache add   rawSpec: '.',
+7 silly cache add   spec: 'C:\\Users\\cjhowell\\Documents\\Internal\\Node\\idcs-express-token-validator',
+7 silly cache add   type: 'directory' }
+8 verbose addLocalDirectory C:\Users\cjhowell\AppData\Roaming\npm-cache\idcs-express-token-validator\1.0.1\package.tgz not in flight; packing
+9 verbose correctMkdir C:\Users\cjhowell\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+10 info lifecycle idcs-express-token-validator@1.0.1~prepublish: idcs-express-token-validator@1.0.1
+11 silly lifecycle idcs-express-token-validator@1.0.1~prepublish: no script for prepublish, continuing
+12 verbose tar pack [ 'C:\\Users\\cjhowell\\AppData\\Roaming\\npm-cache\\idcs-express-token-validator\\1.0.1\\package.tgz',
+12 verbose tar pack   'C:\\Users\\cjhowell\\Documents\\Internal\\Node\\idcs-express-token-validator' ]
+13 verbose tarball C:\Users\cjhowell\AppData\Roaming\npm-cache\idcs-express-token-validator\1.0.1\package.tgz
+14 verbose folder C:\Users\cjhowell\Documents\Internal\Node\idcs-express-token-validator
+15 verbose addLocalTarball adding from inside cache C:\Users\cjhowell\AppData\Roaming\npm-cache\idcs-express-token-validator\1.0.1\package.tgz
+16 verbose correctMkdir C:\Users\cjhowell\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+17 silly cache afterAdd idcs-express-token-validator@1.0.1
+18 verbose afterAdd C:\Users\cjhowell\AppData\Roaming\npm-cache\idcs-express-token-validator\1.0.1\package\package.json not in flight; writing
+19 verbose correctMkdir C:\Users\cjhowell\AppData\Roaming\npm-cache correctMkdir not in flight; initializing
+20 verbose afterAdd C:\Users\cjhowell\AppData\Roaming\npm-cache\idcs-express-token-validator\1.0.1\package\package.json written
+21 silly publish { name: 'idcs-express-token-validator',
+21 silly publish   version: '1.0.1',
+21 silly publish   description: 'IDCS Access token validator middleware for Express',
+21 silly publish   main: 'index.js',
+21 silly publish   scripts: { test: 'echo "Error: no test specified" && exit 1' },
+21 silly publish   author: { name: 'callan.howell-pavia@oracle.com' },
+21 silly publish   license: 'MIT',
+21 silly publish   repository:
+21 silly publish    { type: 'git',
+21 silly publish      url: 'git+https://github.com/CallanHP/idcs-express-token-validator.git' },
+21 silly publish   keywords:
+21 silly publish    [ 'IDCS',
+21 silly publish      'Oracle',
+21 silly publish      'Authorisation',
+21 silly publish      'Express',
+21 silly publish      'ExpressJS',
+21 silly publish      'Identity' ],
+21 silly publish   dependencies: { jsonwebtoken: '^7.1.9', request: '^2.78.0' },
+21 silly publish   readme: '# idcs-express-token-validator\r\n\r\nMiddleware for expressjs which validates access tokens provided by Oracle\'s IDCS.\r\n\r\n\r\n## Installation\r\n\r\n```bash\r\n$ npm install idcs-express-token-validator\r\n```\r\n\r\n## Usage\r\n\r\nThe token validator exposes two methods, an initialisation method, initialise(), and a validator. The initialisation method takes a configuration object, which is used to connect to an IDCS instance and pull down the public keys required to validate supplied access tokens. Initialisation is performed asynchronously, and may take a few seconds to obtain the appropriate keys from the IDCS instance. During this time, all token validations will fail. Once initialised, the middleware will validate incoming tokens, reject them if appropriate, and populate a `request.claimSet` object that can be used by downstream services.\r\n\r\n```js\r\nvar tokenValidator = require(\'idcs-express-token-validator\');\r\n\r\nvar tokenConfig = require(\'./idcs-config.json\');\r\n\r\ntokenValidator.initialise(tokenConfig);\r\n\r\nvar express = require(\'express\');  \r\nvar app = express();\r\n\r\napp.use(tokenValidator.validator);\r\n```\r\n\r\n## IDCS Setup\r\n\r\nAs of IDCS 17.3.4, IDCS now allows JWKs to be obtained without registering a client. This must be enabled by turning on \'Access Signing Certificate\' in the Default Settings screen. If this is enabled, there is no need to configure an application in IDCS, or supply a client_id/secret in the configuration. \r\n\r\nIf this is not enabled, this Middleware requires a Web Application to be configured in IDCS to support the Client Credential grant (to obtain the JWK Signing Keys). The client_id and secret of that application need to be provided in the configuration object detailed below.\r\n\r\nIn order to use scopes for authorisation, the token must have been issued for an IDCS application which is configured as a resource server with those scopes available.\r\n\r\n## Configuration\r\n\r\nA typical configuration object looks like the following:\r\n\r\n```js\r\n{\r\n\t"idcs_url":"https://<tenant_name>.idcs.<datacentre>.oraclecloud.com",\r\n\t"client_id":"<Application_Client_ID>",\r\n\t"client_secret":"<Application_Client_Secret>",\r\n\r\n\t"scopes_by_uri":{\r\n\t\t"/services/super-secret-info" : "super_secret",\r\n\t\t"/services/less-secret-info" : "less_secret",\r\n\t\t"/services/super-secret-personal-info" : "super_secret personal"\r\n\t}\r\n}\r\n```\r\n\r\n### Associating Scopes with URIs\r\n\r\nThe scopes which were set up in IDCS can be used protect endpoints exposed through Express, though an association needs to be set up in the configuration which is used for initialisation. There are several ways to do this, the simplest being a URI:required scope mapping in the `scopes_by_uri` object.\r\n\r\nExpress named parameters are supported in this simple mapping, such that `/services/:serviceid` can be matched to scopes in the configuration.\r\n\r\nRegex mapping of URIs is also supported, though requires an additional `regex_uris` array to be added to the configuration, which contains an array of regexes mapped to scopes. An example of this is:\r\n\r\n```js\r\n"regex_uris":[\r\n\t\t{"regex":"^\\/services\\/regular(-|_)info$", "scopes":"not_secret"}\r\n\t]\r\n```\r\n\r\n**Unknown URIS:** By default if a request comes on a path which cannot be matched, no scope validation is done. If the token is valid, it is considered a valid request. This can be overridden by setting a `default_scopes` value in the config. For instance, to perform a default deny on unknown paths:\r\n```js\r\n"default_scopes":"impossible_never_issued_scope"\r\n```\r\n\r\nAt present there is no ability to set different required scopes for different HTTP methods. This perhaps could be added in a future release.\r\n\r\n### Audience Validation\r\n\r\nIf validation of the \'aud\' attribute of the token is required, simply add an `audience` value to the config object. This should match the Primary Audience configured in IDCS.\r\n```js\r\n"audience":"http://<host>:<port>/endpoint/"\r\n```',
+21 silly publish   readmeFilename: 'README.md',
+21 silly publish   gitHead: '5b4240776a770649bd893472849bff565443adbc',
+21 silly publish   bugs: { url: 'https://github.com/CallanHP/idcs-express-token-validator/issues' },
+21 silly publish   homepage: 'https://github.com/CallanHP/idcs-express-token-validator#readme',
+21 silly publish   _id: 'idcs-express-token-validator@1.0.1',
+21 silly publish   _shasum: '3b19cee7b58eb88d1d6030ea03e8ebb1abb317e1',
+21 silly publish   _from: '.' }
+22 verbose getPublishConfig undefined
+23 silly mapToRegistry name idcs-express-token-validator
+24 silly mapToRegistry using default registry
+25 silly mapToRegistry registry https://registry.npmjs.org/
+26 silly mapToRegistry data Result {
+26 silly mapToRegistry   raw: 'idcs-express-token-validator',
+26 silly mapToRegistry   scope: null,
+26 silly mapToRegistry   name: 'idcs-express-token-validator',
+26 silly mapToRegistry   rawSpec: '',
+26 silly mapToRegistry   spec: 'latest',
+26 silly mapToRegistry   type: 'tag' }
+27 silly mapToRegistry uri https://registry.npmjs.org/idcs-express-token-validator
+28 verbose publish registryBase https://registry.npmjs.org/
+29 silly publish uploading C:\Users\cjhowell\AppData\Roaming\npm-cache\idcs-express-token-validator\1.0.1\package.tgz
+30 verbose request uri https://registry.npmjs.org/idcs-express-token-validator
+31 verbose request sending authorization for write operation
+32 info attempt registry request try #1 at 6:25:51 PM
+33 verbose request using bearer token for auth
+34 verbose request id 9bd3f76778bc9791
+35 http request PUT https://registry.npmjs.org/idcs-express-token-validator
+36 http 403 https://registry.npmjs.org/idcs-express-token-validator
+37 verbose headers { 'content-type': 'application/json',
+37 verbose headers   'cache-control': 'max-age=300',
+37 verbose headers   'content-length': '91',
+37 verbose headers   'accept-ranges': 'bytes',
+37 verbose headers   date: 'Wed, 04 Oct 2017 07:25:53 GMT',
+37 verbose headers   via: '1.1 varnish',
+37 verbose headers   connection: 'keep-alive',
+37 verbose headers   'x-served-by': 'cache-mel6525-MEL',
+37 verbose headers   'x-cache': 'MISS',
+37 verbose headers   'x-cache-hits': '0',
+37 verbose headers   'x-timer': 'S1507101953.713166,VS0,VE974',
+37 verbose headers   vary: 'Accept-Encoding, Accept' }
+38 verbose request invalidating C:\Users\cjhowell\AppData\Roaming\npm-cache\registry.npmjs.org\idcs-express-token-validator on PUT
+39 error publish Failed PUT 403
+40 verbose stack Error: You cannot publish over the previously published version 1.0.1. : idcs-express-token-validator
+40 verbose stack     at makeError (C:\Program Files\nodejs\node_modules\npm\node_modules\npm-registry-client\lib\request.js:264:12)
+40 verbose stack     at CachingRegistryClient.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\npm-registry-client\lib\request.js:252:14)
+40 verbose stack     at Request._callback (C:\Program Files\nodejs\node_modules\npm\node_modules\npm-registry-client\lib\request.js:172:14)
+40 verbose stack     at Request.self.callback (C:\Program Files\nodejs\node_modules\npm\node_modules\request\request.js:200:22)
+40 verbose stack     at emitTwo (events.js:106:13)
+40 verbose stack     at Request.emit (events.js:191:7)
+40 verbose stack     at Request.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\request\request.js:1067:10)
+40 verbose stack     at emitOne (events.js:101:20)
+40 verbose stack     at Request.emit (events.js:188:7)
+40 verbose stack     at IncomingMessage.<anonymous> (C:\Program Files\nodejs\node_modules\npm\node_modules\request\request.js:988:12)
+41 verbose statusCode 403
+42 verbose pkgid idcs-express-token-validator
+43 verbose cwd C:\Users\cjhowell\Documents\Internal\Node\idcs-express-token-validator
+44 error Windows_NT 10.0.14393
+45 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "publish"
+46 error node v6.2.0
+47 error npm  v3.8.9
+48 error code E403
+49 error You cannot publish over the previously published version 1.0.1. : idcs-express-token-validator
+50 error If you need help, you may report this error at:
+50 error     <https://github.com/npm/npm/issues>
+51 verbose exit [ 1, true ]
