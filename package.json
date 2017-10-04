@@ -1,6 +1,6 @@
 {
   "name": "idcs-express-token-validator",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "IDCS Access token validator middleware for Express",
   "main": "index.js",
   "scripts": {
